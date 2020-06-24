@@ -1,7 +1,6 @@
-<<<<<<< HEAD
 # Projects-CPP
 Some short C++ projects put into one repo. 
-=======
+
 # What is this all about?
 So in this project I'm writing some C++ code for different puproses whilst trying to learn CMake 
 by deliberately writing the code in various ways i.e. using forward declaration when 
@@ -21,5 +20,3 @@ the description is taken from here: [Link] (https://github.com/thekarangoel/Proj
 **Maze Generator** - Currently under development but the idea is to generate and solve mazes.
 
 **CPP Mechanism** - Workshop focued on setting up a proper project in CMake and testing different C++ mechanisms.
-
->>>>>>> My first commit containing 3 projects
