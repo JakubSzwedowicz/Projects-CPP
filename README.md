@@ -16,4 +16,10 @@ the description is taken from here: [Link] (https://github.com/thekarangoel/Proj
 
 **Next Prime Number** – Have the program find prime numbers until the user chooses to stop asking for the next one.
 
+# Custom Projects
+
+**Maze Generator** - Currently under development but the idea is to generate and solve mazes.
+
+**CPP Mechanism** - Workshop focued on setting up a proper project in CMake and testing different C++ mechanisms.
+
 >>>>>>> My first commit containing 3 projects
