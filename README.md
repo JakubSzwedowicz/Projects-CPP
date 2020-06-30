@@ -20,3 +20,6 @@ the description is taken from here: [Link] (https://github.com/thekarangoel/Proj
 **Maze Generator** - Currently under development but the idea is to generate and solve mazes.
 
 **CPP Mechanism** - Workshop focued on setting up a proper project in CMake and testing different C++ mechanisms.
+
+**Sorting Algorithms** - Set of some sorting alorithms put into the comparision with each other and std::sort.
+

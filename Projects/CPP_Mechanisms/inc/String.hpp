@@ -9,6 +9,7 @@ class String
 			T* m_data = nullptr;
 			int m_size = 0;
 		public:
+			// Constructors
 			String(const T* a_data);
 			String(const String<T>& a_string);
 			String(String<T>&& a_string);
@@ -16,7 +17,10 @@ class String
 			inline T* GetData() const;
 			void SetData(const T* a_data);
 			inline int GetSize() const;
+
+			// operator overloads
 			String<T>& operator=(const String<T>& a_string);
+			String<T>& operator=(String<T>&& a_string);
 			template <typename U>
-			friend std::ostream& operator<<(std::ostream& a_out, const String<U>& a_string);			
+			friend std::ostream& operator<< (std::ostream& a_out, const String<U>& a_string);			
 };

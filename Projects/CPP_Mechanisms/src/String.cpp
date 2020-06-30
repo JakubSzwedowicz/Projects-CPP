@@ -47,6 +47,34 @@ std::ostream& operator<< (std::ostream& a_out, const String<U>& a_string)
 }
 
 template <typename T>
+String<T>& String<T>::operator=(const String<T>& a_string) 
+{
+		if(this == &a_string)
+				return *this;
+		else
+		{
+				delete[] m_data;
+				m_size = a_string.m_size;
+				m_data = new T [m_size];
+				std::memcpy(m_data, a_string.m_data, m_size);
+				return *this;
+		}
+}
+
+template <typename T>
+String<T>& String<T>::operator=(String<T>&& a_string)
+{
+		std::cout << "String operator= (String<T>&&) " << std::endl;
+		delete[] m_data;
+		m_size = a_string.m_size;
+		m_data = a_string.m_data;
+		
+		// Creating hollow object
+		a_string.m_data = nullptr;
+		a_string.m_size = 0;
+		return *this;
+}
+template <typename T>
 inline T* String<T>::GetData() const 
 {
 		return m_data;

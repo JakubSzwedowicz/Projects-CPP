@@ -13,6 +13,9 @@ int main()
 		entity2 = entity1;
 		entity2.Print();
 
+		entity2 = "Some new text";
+		entity2.Print();
+
 		std::cin.get();
 		return 0;
 }
