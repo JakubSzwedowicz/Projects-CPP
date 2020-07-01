@@ -8,7 +8,7 @@ template std::ostream& operator<< (std::ostream& a_out, const String<char>& a_st
 template <typename T>
 String<T>::String(const T* a_data)
 {
-		std::cout << "Created String by const T*" << typeid(T).name() << std::endl;
+		std::cout << "Created String by const T*, where T = " << typeid(T).name() << std::endl;
 		m_size = strlen(a_data);
 		m_data = new T [m_size];
 		std::memcpy(m_data, a_data, m_size);
@@ -17,7 +17,7 @@ String<T>::String(const T* a_data)
 template<typename T>
 String<T>::String(const String<T>& a_string)
 {
-	std::cout << "Created String with const String<T>" << typeid(T).name() << std::endl;
+	std::cout << "Created String with const String<T>, where T = " << typeid(T).name() << std::endl;
 	m_size = a_string.m_size;
 	m_data = new T [m_size];
 	std::memcpy(m_data, a_string.m_data, m_size);
@@ -49,6 +49,7 @@ std::ostream& operator<< (std::ostream& a_out, const String<U>& a_string)
 template <typename T>
 String<T>& String<T>::operator=(const String<T>& a_string) 
 {
+    std::cout << "String operator= (const String<T>&) aka copy assignment" << std::endl;
 		if(this == &a_string)
 				return *this;
 		else
@@ -64,7 +65,7 @@ String<T>& String<T>::operator=(const String<T>& a_string)
 template <typename T>
 String<T>& String<T>::operator=(String<T>&& a_string)
 {
-		std::cout << "String operator= (String<T>&&) " << std::endl;
+		std::cout << "String operator= (String<T>&&) aka move assignment" << std::endl;
 		delete[] m_data;
 		m_size = a_string.m_size;
 		m_data = a_string.m_data;
