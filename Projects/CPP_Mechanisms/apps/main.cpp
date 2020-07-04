@@ -4,6 +4,8 @@
 int main()
 {
 //    TestInheritance();
-//    TestTemplates()
+//    TestTemplates();
+//    TestSmartPointers();
+    TestDataStructures();
     return 0;
 }

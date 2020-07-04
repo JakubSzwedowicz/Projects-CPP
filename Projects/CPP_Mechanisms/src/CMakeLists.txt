@@ -1,2 +1,4 @@
 add_subdirectory(inheritance)
 add_subdirectory(templates)
+add_subdirectory(smart_pointers)
+add_subdirectory(data_structures)
