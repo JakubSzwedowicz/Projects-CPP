@@ -178,9 +178,10 @@ void TestDataStructures() {
         std::cout << myList << std::endl;
         std::cout << "Adding another node at the place pointed by index = 3" << std::endl;
         std::cin.get();
-        myList.PushAtIndex(People(2, 2.0, "Drab"), 3);
+        myList.Insert(People(2, 2.0, "Drab"), 3);
         std::cout << myList << std::endl;
 
+        std::cin.get();
         std::cout << "Removing list" << std::endl;
         std::cin.get();
     }
@@ -188,6 +189,34 @@ void TestDataStructures() {
     std::cin.get();
 
     {
+        std::cout << "--------------TEST2--------------" << std::endl;
+        DLinkedList myList;
+        std::cout << "Adding 5 nodes to double linked list" << std::endl;
+        std::cin.get();
+        myList.PushBack(People(54, 1.0, "Skarsnik"));
+        myList.PushFront(People(10, 2.0, "Big Uns"));
+        myList.PushFront(People(15, 0.5, "Black Ork"));
+        myList.PushFront(People(22, 1.5, "Savage Ork"));
+        myList.PushFront(People(666, 5.5, "Da Best"));
+        std::cout << myList << std::endl;
 
+        std::cout << "Testing Bubble sort" << std::endl;
+        std::cout << "Sorting list by elements' age" << std::endl;
+        std::cin.get();
+        myList.BubbleSort('a');
+        std::cout << myList << std::endl;
+
+        std::cout << "Sorting list by elements' grade" << std::endl;
+        std::cin.get();
+        myList.BubbleSort('g');
+        std::cout << myList << std::endl;
+
+        std::cout << "Sorting list by elements' name" << std::endl;
+        std::cin.get();
+        myList.BubbleSort('n');
+        std::cout << myList << std::endl;
+        std::cin.get();
     }
+    std::cout << "---------------------------------- \n" << "Press anything to continue" << std::endl;
+    std::cin.get();
 }
