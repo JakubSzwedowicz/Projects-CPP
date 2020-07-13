@@ -45,7 +45,6 @@ void TestTemplates()
         entity5.Print();
     }
 }
-
 void TestInheritance()
 {
     std::cout << "Testing inheritance" << std::endl;
@@ -77,7 +76,6 @@ void TestInheritance()
     }
 
 }
-
 void TestSmartPointers()
 {
     std::cout << "Testing Smart Pointers" << std::endl;
@@ -214,6 +212,16 @@ void TestDataStructures() {
         std::cout << "Sorting list by elements' name" << std::endl;
         std::cin.get();
         myList.BubbleSort('n');
+        std::cout << myList << std::endl;
+
+        std::cout << "Now swapping myList[1] and myList[2]" << std::endl;
+        std::cin.get();
+        myList.SwapTwo(myList[1], myList[2]);
+        std::cout << myList << std::endl;
+
+        std::cout << "Now swapping myList[1] and myList[3]" << std::endl;
+        std::cin.get();
+        myList.SwapTwo(myList[1], myList[3]);
         std::cout << myList << std::endl;
         std::cin.get();
     }

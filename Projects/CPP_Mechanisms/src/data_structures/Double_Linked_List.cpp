@@ -18,31 +18,41 @@ DLinkedList::~DLinkedList() // AVOID RECURSIVE DESTRUCTOR !!!
 void DLinkedList::PushFront(const People &a_data)
 {
     std::shared_ptr<Node> node = std::make_shared<Node>(a_data);
-    if(m_size != 0)
+    if(m_size == 0)
     {
+        m_head = node;
+        m_tail = node;
+    }
+    else
+    {
+        if(m_sorted == true)
+        {
+            PushIfSorted(a_data);
+            return;
+        }
         node->GetPreviousNode() = m_head;
         m_head->GetNextNode() = node;
         m_head = node;
     }
-    else
-    {
-        m_head = node;
-        m_tail = node;
-    }
     m_size++;
 }
-void DLinkedList::PushBack(const People &a_data)
+void DLinkedList::PushBack(const People &a_data, bool a_sorted)
 {
     std::shared_ptr<Node> node = std::make_shared<Node>(a_data);
-    if(m_size != 0)
+    if(m_size == 0)
     {
-        node->GetNextNode() = m_tail;
-        m_tail.lock()->GetPreviousNode() = node;
+        m_head = node;
         m_tail = node;
     }
     else
     {
-        m_head = node;
+        if(m_sorted == true && a_sorted == false)
+        {
+            PushIfSorted(a_data);
+            return;
+        }
+        node->GetNextNode() = m_tail;
+        m_tail.lock()->GetPreviousNode() = node;
         m_tail = node;
     }
     m_size++;
@@ -58,18 +68,18 @@ void DLinkedList::PushIfSorted(const People& a_data)
         {
             case 'a':
                 for(index = 0; index < m_size && node->GetData().GetAge() < a_data.GetAge(); index++)
-                    node = node->GetPreviousNode();
-                break;
+                        node = node->GetPreviousNode();
+                    break;
             case 'g':
                 for(index = 0; index < m_size && node->GetData().GetAge() < a_data.GetAge(); index++)
-                    node = node->GetPreviousNode();
+                        node = node->GetPreviousNode();
                 break;
             case 'n':
                 for(index = 0; index < m_size && node->GetData().GetName().compare(a_data.GetName()) < 0; index++)
-                    node = node->GetPreviousNode();
+                        node = node->GetPreviousNode();
                 break;
         }
-        m_size++;
+        Insert(a_data, node, true);
     }
 }
 
@@ -77,7 +87,7 @@ People DLinkedList::PopFront()
 {
     if(m_size == 0)
     {
-        std::cout << "List is empty" << std::endl;
+        std::cout << "PopFront: List is empty" << std::endl;
         return NULL;
     }
     People data;
@@ -91,7 +101,7 @@ People DLinkedList::PopBack()
 {
     if(m_size == 0)
     {
-        std::cout << "List is empty" << std::endl;
+        std::cout << "PopBack: List is empty" << std::endl;
         return NULL;
     }
     People data;
@@ -115,7 +125,7 @@ void DLinkedList::Print() const
 std::ostream &operator<<(std::ostream &a_out, const DLinkedList &a_list)
 {
     std::weak_ptr<Node> iterator = a_list.m_head;
-    for(int i = 1; i <= a_list.m_size; i++)
+    for(int i = 0; i < a_list.m_size; i++)
     {
         a_out << "Node " << i << ": \n" << iterator.lock()->GetData() << std::endl;
         iterator = iterator.lock()->GetPreviousNode();
@@ -123,12 +133,17 @@ std::ostream &operator<<(std::ostream &a_out, const DLinkedList &a_list)
     return a_out;
 }
 
-void DLinkedList::Insert(const People &a_data, int a_iterator)
+void DLinkedList::Insert(const People &a_data, int a_iterator, bool a_sorted)
 {
-    if(a_iterator < 0 || a_iterator > m_size)
-        std::cout << "Out of bound iterator!" << std::endl;
-    else if(a_iterator == m_size -1)
-        PushBack(a_data);
+    if(a_iterator < 0 || a_iterator > m_size || m_size == 0)
+    {
+        std::cout << "Insert:: Out of bound iterator or m_size == 0!" << std::endl;
+        return;
+    }
+    if(a_iterator == m_size -1)
+        PushBack(a_data);   // Checks if sorted and increases size
+    else if(a_iterator == 0)
+        PushFront(a_data);  // Checks if sorted and increases size
     else
     {
         std::shared_ptr<Node> s_ptr;
@@ -139,13 +154,14 @@ void DLinkedList::Insert(const People &a_data, int a_iterator)
             s_ptr->GetNextNode().lock()->GetPreviousNode() = data_pointer;
         data_pointer->GetNextNode() = s_ptr->GetNextNode().lock();
         s_ptr->GetNextNode() = data_pointer;
+        m_size++;
+        m_sorted = false;   // No longer sorted
     }
-    m_size++;
 }
-void DLinkedList::Insert(const People &a_data, std::shared_ptr<Node> a_node)
+void DLinkedList::Insert(const People &a_data, std::shared_ptr<Node> a_node, bool a_sorted)
 {
-    if(a_node == nullptr)
-        PushBack(a_data);
+    if(a_node == nullptr)   // if a_data is supposed to be added at the end of the list (m_tail)
+        PushBack(a_data, a_sorted);   // Checks if sorted and increases size
     else
     {
         std::shared_ptr<Node> data_pointer = std::make_shared<Node>(a_data);
@@ -154,12 +170,19 @@ void DLinkedList::Insert(const People &a_data, std::shared_ptr<Node> a_node)
             a_node->GetNextNode().lock()->GetPreviousNode() = data_pointer;
         data_pointer->GetNextNode() = a_node->GetNextNode().lock();
         a_node->GetNextNode() = data_pointer;
+        m_size++;
+        if(!a_sorted)
+            m_sorted = false;
     }
-    m_size++;
 }
 
 std::shared_ptr<Node> DLinkedList::operator[] (const int a_index) const {
     std::shared_ptr<Node> s_ptr;
+    if(a_index >= m_size || a_index < 0 || m_size == 0)
+    {
+        std::cout << "operator[]: out of bound index or m_size == 0" << std::endl;
+        return nullptr;
+    }
     if(a_index == m_size)
         return s_ptr = m_tail.lock()->GetPreviousNode();
     if(a_index < m_size/2)
@@ -172,33 +195,88 @@ std::shared_ptr<Node> DLinkedList::operator[] (const int a_index) const {
         for(int i = m_size - 1; i != a_index; i--)
             s_ptr = s_ptr->GetNextNode().lock();
     }
+    const_cast<DLinkedList*>(this)->m_sorted = false; // in case user changes sth afterwards
     return s_ptr;
 }
 
 void DLinkedList::SwapTwo(int a_first, int a_second)
 {
+    if(m_size < 2 || a_first < 0 || a_first == a_second || a_second < 0 || a_first > m_size || a_second > m_size)
+    {
+        std::cout << "SwapTwo: out of bound indexes or m_size < 2" << std::endl;
+        return;
+    }
+    if(a_first > a_second)
+        std::swap(a_first, a_second);
     std::shared_ptr<Node> first_node = (*this)[a_first];
     std::shared_ptr<Node> second_node = first_node;
-    if(a_first < a_second)  // Optimization tweak
-        for(int i = a_first; i != a_second && i < m_size; i++)
-            second_node = second_node->GetPreviousNode();
-    else
-        for(int i = a_second; i != a_first && i < m_size; i--)
-            second_node = second_node->GetNextNode().lock();
-    first_node->GetDataPointer().swap(second_node->GetDataPointer());
+    for(int i = a_first; i != a_second && i < m_size; i++)
+        second_node = second_node->GetPreviousNode();
+    SwapTwo(first_node, second_node);
 }
 
 void DLinkedList::SwapTwo(std::shared_ptr<Node> a_first, std::shared_ptr<Node> a_second)
 {
-    a_first->GetDataPointer().swap(a_second->GetDataPointer());
+    if(m_size < 2 || a_first == nullptr || a_second == nullptr || a_first == a_second)
+    {
+        std::cout << "SwapTwo: empty/equal pointers, or m_size < 2" << std::endl;
+        return;
+    }
+    if(a_second->GetPreviousNode() == a_first) // if a_second is before a_first
+        a_first.swap(a_second);
+
+    if(a_first->GetPreviousNode() == a_second) // if they are next to each other
+    {
+        if( !(a_first->GetNextNode().expired()) )   // if the next node exists, i.e. it is not nullptr
+            a_first->GetNextNode().lock()->GetPreviousNode() = a_second;
+        else    // then it means that a_first == m_head
+            m_head = a_second;
+        a_second->GetNextNode() = a_first->GetNextNode();
+        if( a_second->GetPreviousNode() != nullptr )    // if the previous node exists, i.e. it is not a nullptr
+            a_second->GetPreviousNode()->GetNextNode() = a_first;
+        else    // then it means that a_second == m_tail
+            m_tail.lock() = a_first;
+        a_first->GetPreviousNode() = a_second->GetPreviousNode();
+
+        a_first->GetNextNode() = a_second;
+        a_second->GetPreviousNode() = a_first;
+
+    } else  // If they are NOT next to each other
+    {
+        std::shared_ptr<Node> next, previous;
+        previous = a_first->GetPreviousNode();
+        next = a_first->GetNextNode().lock();
+
+        a_first->GetNextNode() = a_second->GetNextNode();
+        a_first->GetNextNode().lock()->GetPreviousNode() = a_first;
+        a_first->GetPreviousNode() = a_second->GetPreviousNode();
+        if(a_first->GetPreviousNode() != nullptr)   // if it's not nullptr, i.e. if a_second->GetPrevious != nullptr
+            a_first->GetPreviousNode()->GetNextNode() = a_first;
+        else    // then it means that a_second == m_tail
+            m_tail = a_first;
+
+        a_second->GetPreviousNode() = previous;
+        previous->GetNextNode() = a_second;
+        a_second->GetNextNode() = next;
+        if(next != nullptr) // if it's not nullptr, i.e. if a_first wasn't m_head
+            next->GetPreviousNode() = a_second;
+        else
+            m_head = a_second;
+    }
+    m_sorted = false;
 }
 
 void DLinkedList::BubbleSort(char a_sorting)
 {
-    bool m_sorted = true;
-    for(int i = 0; i < m_size-1 && m_sorted == true; i++)
+    if(m_size < 2)
     {
-        m_sorted = false;
+        std::cout << "BubbleSort: Nothing to sort" << std::endl;
+        return;
+    }
+    m_sorted = false;
+    for(int i = 0; i < m_size-1 && m_sorted == false; i++)
+    {
+        m_sorted = true;
         for(std::shared_ptr<Node> node = m_head, next_node = m_head->GetPreviousNode();
             next_node != nullptr;
             node = node->GetPreviousNode(), next_node = next_node->GetPreviousNode())
@@ -209,25 +287,29 @@ void DLinkedList::BubbleSort(char a_sorting)
                         if(node->GetData().GetAge() > node->GetPreviousNode()->GetData().GetAge())
                         {
                             SwapTwo(node, next_node);
-                            m_sorted = true;
+                            m_sorted = false;
+                            node.swap(next_node);
                         }
                     break;
                 case 'g':
                     if(node->GetData().GetGrade() > next_node->GetData().GetGrade())
                     {
                         SwapTwo(node, next_node);
-                        m_sorted = true;
+                        m_sorted = false;
+                        node.swap(next_node);
                     }
                     break;
                 case 'n':
                     if(node->GetData().GetName().compare(next_node->GetData().GetName()) > 0)
                     {
                         SwapTwo(node, next_node);
-                        m_sorted = true;
+                        m_sorted = false;
+                        node.swap(next_node);
                     }
                     break;
             }
         }
     }
+    m_sorted = true;
     m_how_sorted = a_sorting;
 }
