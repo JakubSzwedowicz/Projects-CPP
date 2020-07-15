@@ -50,6 +50,7 @@ void Sorter<T>::RunAll()
     if(!IsSorted(QuickSort())) std::cout << " Quick Sort not working" << std::endl;
     if(!IsSorted(ShellSort())) std::cout << " Shell Sort not working" << std::endl;
     if(!IsSorted(DefaultSTDSort())) std::cout << " default std::sort not working" << std::endl;
+    if(!IsSorted(MergeSort())) std::cout << " Merge Sort not working" << std::endl;
 }
 
 template <typename T>
@@ -135,4 +136,52 @@ T Sorter<T>::DefaultSTDSort()
     Timer timer("DefaultSTDSort");
     std::sort(copy_data.begin(), copy_data.end());
     return copy_data;
+}
+
+template <typename T>
+T Sorter<T>::MergeSort()
+{
+    T copy_data(m_data);
+    Timer timer("MergeSort");
+    ActualMergeSort(copy_data, 0, copy_data.size() - 1);
+    return copy_data;
+}
+
+template<typename T>
+void Sorter<T>::ActualMergeSort(T &a_data, int a_low, int a_high) {
+
+
+    if(a_low != a_high)
+    {
+        int split = (a_low + a_high)/2;
+        ActualMergeSort(a_data, a_low, split);
+        ActualMergeSort(a_data, split + 1, a_high);
+
+        int left_size = split - a_low + 1;
+        int right_size = a_high - split;
+        int left_array[left_size], right_array[right_size]; // Valid since C99
+
+        std::copy(a_data.begin() + a_low, a_data.begin() + a_low + left_size, left_array);
+        std::copy(a_data.begin() + a_low + left_size, a_data.begin() + a_high + 1, right_array);
+
+        int i = 0, j = 0;
+        while(i != left_size && j != right_size)
+        {
+            if(left_array[i] <= right_array[j])
+            {
+                a_data[a_low + i + j] = left_array[i];
+                i++;
+            }
+            else
+            {
+                a_data[a_low + i + j] = right_array[j];
+                j++;
+            }
+        }
+        for(; i != left_size; i++)
+            a_data[a_low + i + j] = left_array[i];
+        for(; j != right_size; j++)
+            a_data[a_low + i + j] = right_array[j];
+
+    }
 }

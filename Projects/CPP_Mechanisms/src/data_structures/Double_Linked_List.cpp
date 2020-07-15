@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Double_Linked_List.hpp"
 #include "People.hpp"
+#include <variant>
 
 DLinkedList::DLinkedList() : m_size(0), m_sorted(false), m_how_sorted('0')
 {
@@ -217,11 +218,14 @@ void DLinkedList::SwapTwo(int a_first, int a_second)
 
 void DLinkedList::SwapTwo(std::shared_ptr<Node> a_first, std::shared_ptr<Node> a_second)
 {
-    if(m_size < 2 || a_first == nullptr || a_second == nullptr || a_first == a_second)
+    if(m_size < 2 || a_first == nullptr || a_second == nullptr)
     {
-        std::cout << "SwapTwo: empty/equal pointers, or m_size < 2" << std::endl;
+        std::cout << "SwapTwo: empty pointers, or m_size < 2" << std::endl;
         return;
     }
+    if(a_first == a_second)
+        return;
+
     if(a_second->GetPreviousNode() == a_first) // if a_second is before a_first
         a_first.swap(a_second);
 
@@ -312,4 +316,105 @@ void DLinkedList::BubbleSort(char a_sorting)
     }
     m_sorted = true;
     m_how_sorted = a_sorting;
+}
+
+void DLinkedList::MergeSort(char a_sorting) {
+    if(m_size < 2)
+    {
+        std::cout << "MergeSort: There is nothing to sort" << std::endl;
+        return;
+    }
+    ActualMergeSort(m_head, m_tail.lock(), m_size, a_sorting);
+}
+
+void DLinkedList::ActualMergeSort(std::shared_ptr<Node> a_low, std::shared_ptr<Node> a_high, int a_range, char a_sorting)
+{
+    if(a_low != a_high)
+    {
+        int left_size = (a_range+1)/2;
+        int right_size = (a_range)/2;
+
+        std::shared_ptr<Node> split_ptr = a_low;
+        std::shared_ptr<Node> next = a_low->GetNextNode().lock(), previous = a_high->GetPreviousNode();
+        for(int i = 1; i < left_size; i++)
+            split_ptr = split_ptr->GetPreviousNode();
+
+        std::shared_ptr<Node> anchor = split_ptr->GetPreviousNode();
+
+        ActualMergeSort(a_low, split_ptr, left_size, a_sorting);
+        ActualMergeSort(anchor, a_high,right_size, a_sorting);
+
+        if(next == nullptr)
+            a_low = m_head;
+        else
+            a_low = next->GetPreviousNode();
+
+        if(previous == nullptr)
+            a_high = m_tail.lock();
+        else
+            a_high = previous->GetNextNode().lock();
+
+        std::shared_ptr<Node> left_array[left_size], right_array[right_size];
+
+        std::shared_ptr<Node> temp = a_low;
+        for(int i = 0; i < left_size; i++, a_low = a_low->GetPreviousNode())
+            left_array[i] = a_low;
+
+        for(int i = 0; i < right_size; i++, a_low = a_low->GetPreviousNode())
+            right_array[i] = a_low;
+        a_low = temp;
+
+        int i = 0, j = 0;
+        bool flag = true;
+        while(i != left_size && j != right_size)
+        {
+            switch(a_sorting)
+            {
+                case 'a':
+                    if(left_array[i]->GetData().GetAge() <= right_array[j]->GetData().GetAge())
+                        flag = true;
+                    else
+                        flag = false;
+                    break;
+                case 'g':
+                    if(left_array[i]->GetData().GetGrade() <= right_array[j]->GetData().GetGrade())
+                        flag = true;
+                    else
+                        flag = false;
+                    break;
+                case 'n':
+                    if(left_array[i]->GetData().GetName().compare(right_array[j]->GetData().GetName()) <= 0)
+                        flag = true;
+                    else
+                        flag = false;
+                    break;
+            }
+            if(flag)
+            {
+                SwapTwo(a_low, left_array[i]);
+                a_low = left_array[i];
+                a_low = a_low->GetPreviousNode();
+                i++;
+            } else
+            {
+                SwapTwo(a_low, right_array[j]);
+                a_low = right_array[j];
+                a_low = a_low->GetPreviousNode();
+                j++;
+            }
+        }   // after the while(i != ... && j != ...)
+
+        for(; i != left_size; i++)
+        {
+            SwapTwo(a_low, left_array[i]);
+            a_low = left_array[i];
+            a_low = a_low->GetPreviousNode();
+        }
+        for(; j != right_size; j++)
+        {
+            SwapTwo(a_low, right_array[j]);
+            a_low = right_array[j];
+            a_low = a_low->GetPreviousNode();
+        }
+    }
 }

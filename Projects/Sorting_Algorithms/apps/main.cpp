@@ -30,6 +30,7 @@ int main()
 //    Print(sorter.QuickSort());
 //    Print(sorter.ShellSort());
 //    Print(sorter.DefaultSTDSort());
+//    Print(sorter.MergeSort());
     sorter.RunAll();
 	return 0;
 }

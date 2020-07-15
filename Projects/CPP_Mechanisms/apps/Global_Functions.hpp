@@ -189,29 +189,30 @@ void TestDataStructures() {
     {
         std::cout << "--------------TEST2--------------" << std::endl;
         DLinkedList myList;
-        std::cout << "Adding 5 nodes to double linked list" << std::endl;
+        std::cout << "Adding 6 nodes to double linked list" << std::endl;
         std::cin.get();
         myList.PushBack(People(54, 1.0, "Skarsnik"));
         myList.PushFront(People(10, 2.0, "Big Uns"));
         myList.PushFront(People(15, 0.5, "Black Ork"));
         myList.PushFront(People(22, 1.5, "Savage Ork"));
         myList.PushFront(People(666, 5.5, "Da Best"));
+        myList.PushFront(People(123, 3.5, "Wulfrag"));
         std::cout << myList << std::endl;
 
-        std::cout << "Testing Bubble sort" << std::endl;
+        std::cout << "Testing Merge sort" << std::endl;
         std::cout << "Sorting list by elements' age" << std::endl;
         std::cin.get();
-        myList.BubbleSort('a');
+        myList.MergeSort('a');
         std::cout << myList << std::endl;
 
         std::cout << "Sorting list by elements' grade" << std::endl;
         std::cin.get();
-        myList.BubbleSort('g');
+        myList.MergeSort('g');
         std::cout << myList << std::endl;
 
         std::cout << "Sorting list by elements' name" << std::endl;
         std::cin.get();
-        myList.BubbleSort('n');
+        myList.MergeSort('n');
         std::cout << myList << std::endl;
 
         std::cout << "Now swapping myList[1] and myList[2]" << std::endl;
