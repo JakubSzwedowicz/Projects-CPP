@@ -325,11 +325,13 @@ void DLinkedList::MergeSort(char a_sorting) {
         return;
     }
     ActualMergeSort(m_head, m_tail.lock(), m_size, a_sorting);
+    m_sorted = true;
+    m_how_sorted = a_sorting;
 }
 
 void DLinkedList::ActualMergeSort(std::shared_ptr<Node> a_low, std::shared_ptr<Node> a_high, int a_range, char a_sorting)
 {
-    if(a_low != a_high)
+    if(a_range > 1) //a_low != a_high
     {
         int left_size = (a_range+1)/2;
         int right_size = (a_range)/2;
