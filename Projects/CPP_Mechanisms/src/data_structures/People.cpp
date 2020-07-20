@@ -3,11 +3,11 @@
 
 People::People(int a_age, double a_grade, const char* a_name) : m_age(a_age), m_grade(a_grade), m_name(a_name)
 {
-    std::cout << "People constructor" << std::endl;
+//    std::cout << "People constructor" << std::endl;
 }
 People::~People()
 {
-    std::cout << "People destructor" << std::endl;
+//    std::cout << "People destructor" << std::endl;
 }
 
 People& People::operator=(const People& a_data) {

@@ -12,6 +12,21 @@
 #include <chrono>
 #include <random>
 
+class Timer
+{
+private:
+    std::string m_name;
+    std::chrono::system_clock::time_point m_start;
+public:
+    Timer(const std::string& a_name) : m_name(a_name){ m_start = std::chrono::high_resolution_clock::now();};
+    ~Timer(){
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> diff = end - m_start;
+        float ms = diff.count() * 1000.0f;
+        std::cout << "Function " << m_name << " took " << ms << "ms" << std::endl;
+    }
+};
+
 void TestTemplates()
 {
     std::cout << "Testing templates" << std::endl;
@@ -234,9 +249,10 @@ void TestDataStructures() {
 
     {
         std::cout << "--------------TEST3--------------" << std::endl;
-        DLinkedList firstList, secondList;
+        DLinkedList firstList, secondList, thirdList;
         std::cout << "Adding 1000 nodes to double linked list" << std::endl;
         std::cin.get();
+
         std::array<int, 1000> random_age;
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         std::iota(random_age.begin(), random_age.end(), 0);
@@ -245,34 +261,40 @@ void TestDataStructures() {
 
         std::array<double, 1000> random_grade;
         std::iota(random_grade.begin(), random_grade.end(), 0);
-        std::shuffle(random_grade.begin(), random_grade.end(), std::default_random_engine(seed));
+        std::shuffle(random_grade.begin(), random_grade.end(), std::default_random_engine(seed + 10));
 
         for(int i = 0; i < 1000; i++)
         {
             firstList.PushBack(People(random_age[i], random_grade[i]));
             secondList.PushBack(People(random_age[i], random_grade[i]));
+            thirdList.PushBack(People(random_age[i], random_grade[i]));
         }
 
-        std::cout << "MergeSort: Sorting list by elements' age" << std::endl;
+        std::cout << "There are 3 identical lists: firstList, secondList, thirdList" << std::endl;
+        std::cout << "MergeSort: Sorting firstList by elements' age" << std::endl;
         std::cin.get();
-        auto start = std::chrono::high_resolution_clock::now();
-        firstList.MergeSort('a');
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<float> diff = end - start;
-        float ms = diff.count() * 1000.0f;
-        std::cout << "Sorting by Merge Sort took: " << ms << std::endl;
+        {
+            Timer timer("Merge Sort");
+            firstList.MergeSort('a');
+        }
+        std::cin.get();
+        std::cout << "BubbleSort: Sorting secondlist by elements' age" << std::endl;
+        std::cin.get();
+        {
+            Timer timer("Bubble Sort");
+            secondList.BubbleSort('a');
+        }
         std::cin.get();
 
-        std::cout << "BubbleSort: Sorting list by elements' grade" << std::endl;
+        std::cout << "EasySort: Sorting thirdList by elements' age" << std::endl;
         std::cin.get();
-        start = std::chrono::high_resolution_clock::now();
-        secondList.BubbleSort('a');
-        end = std::chrono::high_resolution_clock::now();
-        diff = end - start;
-        ms = diff.count() * 1000.0f;
-        std::cout << "Sorting by Bubble Sort took: " << ms << std::endl;
+        {
+            Timer timer("Easy Sort");
+            thirdList.EasySort('a');
+        }
+        std::cout << "Press to print the sorted list" << std::endl;
         std::cin.get();
-        std::cout << firstList << std::endl;
+        std::cout << thirdList << std::endl;
     }
     std::cout << "---------------------------------- \n" << "Press anything to continue" << std::endl;
     std::cin.get();

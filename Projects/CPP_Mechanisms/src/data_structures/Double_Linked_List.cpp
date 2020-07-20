@@ -3,17 +3,18 @@
 #include "Double_Linked_List.hpp"
 #include "People.hpp"
 #include <variant>
+#include <utility>  //std::pair
 
 DLinkedList::DLinkedList() : m_size(0), m_sorted(false), m_how_sorted('0')
 {
-    std::cout << "List constructor" << std::endl;
+//    std::cout << "List constructor" << std::endl;
 }
 
 DLinkedList::~DLinkedList() // AVOID RECURSIVE DESTRUCTOR !!!
 {
     while(m_head != nullptr)
         m_head = std::move(m_head->GetPreviousNode());
-    std::cout << "List destructor" << std::endl;
+//    std::cout << "List destructor" << std::endl;
 }
 
 void DLinkedList::PushFront(const People &a_data)
@@ -26,7 +27,7 @@ void DLinkedList::PushFront(const People &a_data)
     }
     else
     {
-        if(m_sorted == true)
+        if(m_sorted)
         {
             PushIfSorted(a_data);
             return;
@@ -418,5 +419,43 @@ void DLinkedList::ActualMergeSort(std::shared_ptr<Node> a_low, std::shared_ptr<N
             a_low = right_array[j];
             a_low = a_low->GetPreviousNode();
         }
+    }
+}
+
+void DLinkedList::EasySort(char a_sorting)
+{
+    std::pair<std::shared_ptr<Node>, std::variant<int, std::string>> array[m_size];
+    std::shared_ptr<Node> ptr = m_head;
+
+    switch(a_sorting)
+    {
+        case 'a':
+            for(int i = 0; ptr != nullptr; i++, ptr = ptr->GetPreviousNode())
+            {
+                array[i].first = ptr;
+                array[i].second = ptr->GetData().GetAge();
+            }
+        case 'g':
+            for(int i = 0; ptr != nullptr; i++, ptr = ptr->GetPreviousNode())
+            {
+                array[i].first = ptr;
+                array[i].second = ptr->GetData().GetGrade();
+            }
+        case 'n':
+            for(int i = 0; ptr != nullptr; i++, ptr = ptr->GetPreviousNode())
+            {
+                array[i].first = ptr;
+                array[i].second = ptr->GetData().GetName();
+            }
+    }
+    if(a_sorting == 'n')
+        std::sort(array, array+m_size, [](auto& n, auto& m){return (std::get<1>(n.second).compare(std::get<1>(m.second)) < 0);});
+    else
+        std::sort(array, array+m_size, [](auto& n, auto& m){return n.second < m.second;});
+    ptr = m_head;
+    for(int i = 0; ptr != nullptr; i++, ptr = ptr->GetPreviousNode())
+    {
+        SwapTwo(ptr, array[i].first);
+        ptr = array[i].first;
     }
 }

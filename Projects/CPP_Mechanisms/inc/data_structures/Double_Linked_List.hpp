@@ -50,4 +50,6 @@ public:
     void SwapTwo(int, int);
 
     void ActualMergeSort(std::shared_ptr<Node>, std::shared_ptr<Node>, int, char);
+
+    void EasySort(char a_sorting);
 };
