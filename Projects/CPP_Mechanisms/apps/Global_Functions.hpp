@@ -6,6 +6,8 @@
 #include "Block.hpp"
 #include "Temp.hpp"
 #include "Double_Linked_List.hpp"
+#include "Tree_Node.hpp"
+#include "Binary_Tree.hpp"
 #include <memory>
 #include <array>
 #include <numeric>
@@ -299,4 +301,26 @@ void TestDataStructures() {
     std::cout << "---------------------------------- \n" << "Press anything to continue" << std::endl;
     std::cin.get();
 
+}
+
+void TestBinaryTree()
+{
+    std::cout << "Testing Binary Tree" << std::endl;
+
+    {
+        std::cout << "--------------TEST1--------------" << std::endl;
+        BinaryTree<int> myTree;
+        myTree.Insert(15);
+        myTree.Insert(9);
+        myTree.Insert(8);
+        myTree.Insert(7);
+        myTree.Insert(6);
+        myTree.Insert(60);
+        myTree.Insert(59);
+        myTree.Insert(12);
+        myTree.Insert(11);
+        myTree.Insert(10);
+        myTree.PrintTree();
+
+    }
 }

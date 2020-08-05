@@ -6,6 +6,7 @@ target_link_libraries(app PRIVATE String)
 target_link_libraries(app PRIVATE Block)
 target_link_libraries(app PRIVATE Temp)
 target_link_libraries(app PRIVATE DList)
+target_link_libraries(app PRIVATE BinaryTree)
 
 set(INCLUDES_DIR
         ${INHERITANCE_INCLUDES_DIR}

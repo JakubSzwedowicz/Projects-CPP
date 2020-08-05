@@ -6,6 +6,7 @@ int main()
 //    TestInheritance();
 //    TestTemplates();
 //    TestSmartPointers();
-    TestDataStructures();
+//    TestDataStructures();
+    TestBinaryTree();
     return 0;
 }

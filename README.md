@@ -15,6 +15,9 @@ the description is taken from here: [Link] (https://github.com/thekarangoel/Proj
 
 **Next Prime Number** – Have the program find prime numbers until the user chooses to stop asking for the next one.
 
+**Sieve of Eratosthenes** - The sieve of Eratosthenes is one of the most officient ways to find all of the smaller primes (below 10 milion). Function is supposed to be used multiple times during a single run, each time increasing number of primes.
+
+**Fast Exponentiation** - Ask the user to enter 2 integers 'a' and 'b' and output a^b in O(lg n) time complexity.
 # Custom Projects
 
 **Maze Generator** - Currently under development but the idea is to generate and solve mazes.
@@ -25,5 +28,5 @@ the description is taken from here: [Link] (https://github.com/thekarangoel/Proj
 
 **Smart Pointers** - Testing basic behaviour of smart pointers.
 
-**Data Structures** - Currently contains double linked list built upon smart pointers.
+**Data Structures** - Currently contains double linked list and Red-black tree built upon smart pointers.
 
