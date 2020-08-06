@@ -28,6 +28,7 @@ void TreeNode<T>::RotateLeft(TreeNode<T> *&a_node) {    // Function assumes that
     m_parent = a_node->m_parent;
     a_node->m_parent = this;
     a_node->m_right.release();
+    a_node->m_right.reset(this->m_left.release()); // So not to lose right branch of this
     if(m_parent != nullptr)
     {
         if(m_parent->m_left.get() == a_node)  // a_node might be on the left of its parent
@@ -45,10 +46,11 @@ void TreeNode<T>::RotateLeft(TreeNode<T> *&a_node) {    // Function assumes that
 }
 
 template<typename T>
-void TreeNode<T>::RotateRight(TreeNode<T> *&a_node) {   // Function assumes that a_node->GetLeft() == this
+void TreeNode<T>::RotateRight(TreeNode<T> *&a_node){   // Function assumes that a_node->GetLeft() == this
     m_parent = a_node->m_parent;
     a_node->m_parent = this;
     a_node->m_left.release();
+    a_node->m_left.reset(this->m_right.release()); // So not to lose right branch of this
     if(m_parent != nullptr)
     {
         if(m_parent->m_left.get() == a_node)  // a_node might be on the left of its parent
