@@ -310,17 +310,17 @@ void TestBinaryTree()
     {
         std::cout << "--------------TEST1--------------" << std::endl;
         BinaryTree<int> myTree;
-        myTree.Insert(1);
-        myTree.Insert(2);
-        myTree.Insert(3);
-        myTree.Insert(4);
-        myTree.Insert(5);
-        myTree.Insert(6);
-        myTree.Insert(7);
-        myTree.Insert(8);
-        myTree.Insert(9);
         myTree.Insert(10);
-        myTree.PrintTree();
+        myTree.Insert(20);
+        myTree.Insert(7);
+        myTree.Insert(2);
+        myTree.Insert(59);
+        myTree.Insert(60);
+        myTree.Insert(12);
+        myTree.Insert(11);
+        myTree.Insert(1);
+        myTree.Insert(10);
+//        myTree.PrintTree();
 
     }
 }

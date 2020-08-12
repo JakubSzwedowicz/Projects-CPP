@@ -9,11 +9,14 @@ class Sorter
         int Partition(T &a_data, int low, int high);
         bool IsSorted(const T &a_data);
         void ActualMergeSort(T& a_data, int a_split, int a_size);
-	public:
-		Sorter(const T a_data) : m_data(a_data) {};
-		T BubbleSort();
-		T SelectionSort();
-		T InsertionSort();
+
+        // No longer used:
+        T OldInsertionSort();
+    public:
+        Sorter(const T a_data) : m_data(a_data) {};
+        T BubbleSort();
+        T SelectionSort();
+        T InsertionSort();
 		T ShellSort();
         void RunAll();
         T QuickSort();

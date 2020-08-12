@@ -21,9 +21,9 @@ T Sorter<T>::BubbleSort()
 				flag = false;
 				for(int i = 0; i < m_data.size() - end_sorted; i++)
                 {
-						if(copy_data.at(i) > copy_data.at(i+1))
+						if(copy_data[i] > copy_data[i+1])
 						{
-                            std::swap(copy_data.at(i), copy_data.at(i+1));
+                            std::swap(copy_data[i], copy_data[i+1]);
 						    flag = true;
 						}
 				}
@@ -47,6 +47,7 @@ void Sorter<T>::RunAll()
     if(!IsSorted(BubbleSort())) std::cout << "Bubble Sort not working" << std::endl;
     if(!IsSorted(SelectionSort())) std::cout << "Selection Sort not working" << std::endl;
     if(!IsSorted(InsertionSort())) std::cout << "Insertion Sort not working" << std::endl;
+    if(!IsSorted(OldInsertionSort())) std::cout << "OldInsertion Sort not working" << std::endl;
     if(!IsSorted(QuickSort())) std::cout << " Quick Sort not working" << std::endl;
     if(!IsSorted(ShellSort())) std::cout << " Shell Sort not working" << std::endl;
     if(!IsSorted(DefaultSTDSort())) std::cout << " default std::sort not working" << std::endl;
@@ -62,15 +63,26 @@ bool Sorter<T>::IsSorted(const T& a_data)
 template <typename T>
 T Sorter<T>::InsertionSort() {
     T copy_data(m_data);
-    int value, j;
     Timer timer("InsertionSort");
-    for(int i = 0; i < copy_data.size(); i++)
+    for(typename T::iterator it = copy_data.begin(); it != copy_data.end(); it++)
     {
-        value = copy_data.at(i);
-        j = i - 1;
-        for (; j >= 0 && copy_data.at(j) > value; j--)
-            copy_data.at(j + 1) = copy_data.at(j);
-        copy_data.at(j+1) = value;
+        std::rotate(std::upper_bound(copy_data.begin(), it, *it), it, it+1);
+    }
+    return copy_data;
+}
+
+template <typename T>
+T Sorter<T>::OldInsertionSort() {
+    T copy_data(m_data);
+    int value;
+    typename T::iterator n_it;
+    Timer timer("OldInsertionSort");
+    for(typename T::iterator it = copy_data.begin(); it != copy_data.end(); it++)
+    {
+        value = *it;
+        for (n_it = it - 1; n_it >= copy_data.begin() && *n_it > value; n_it--)
+            *(n_it+1) = *(n_it);
+        *(n_it + 1) = value;
     }
     return copy_data;
 }
@@ -98,17 +110,17 @@ void Sorter<T>::actual_QuickSort(T& a_data, int a_low, int a_high)
 template <typename T>
 int Sorter<T>::Partition(T& a_data, int a_low, int a_high)
 {
-    int pivot = a_data.at(a_high);
+    int pivot = a_data[a_high];
     int i, j;
     for(i = a_low, j = a_low; i < a_high; i++)
     {
-      if(a_data.at(i) < pivot)
+      if(a_data[i] < pivot)
       {
-          std::swap(a_data.at(i), a_data.at(j));
+          std::swap(a_data[i], a_data[j]);
           j++;
       }
     }
-    std::swap(a_data.at(j), a_data.at(a_high));
+    std::swap(a_data[j], a_data[a_high]);
     return j;
 }
 template <typename T>
@@ -119,11 +131,11 @@ T Sorter<T>::ShellSort() {
     {
         for(int i = interval; i < copy_data.size(); i++)
         {
-            int temp = copy_data.at(i);
+            int temp = copy_data[i];
             int j;
-            for(j = i; j >= interval && copy_data.at(j - interval) > temp; j -= interval)
-                copy_data.at(j) = copy_data.at(j - interval);
-            copy_data.at(j) = temp;
+            for(j = i; j >= interval && copy_data[j - interval] > temp; j -= interval)
+                copy_data[j] = copy_data[j - interval];
+            copy_data[j] = temp;
         }
     }
     return copy_data;

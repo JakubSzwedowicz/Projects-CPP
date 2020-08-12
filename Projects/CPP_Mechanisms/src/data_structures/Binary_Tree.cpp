@@ -13,7 +13,6 @@ void BinaryTree<T>::Insert(T a_key)
     {
         TreeNode<T>* ptr = m_root.get();
         ptr = TravelTree(ptr, a_key);
-//        TreeNode<T>& object = TravelTree(ptr, a_key);
         if(a_key < ptr->GetData())
         {
             ptr->GetLeft() = std::make_unique<TreeNode<T>>(ptr, a_key);
@@ -24,12 +23,12 @@ void BinaryTree<T>::Insert(T a_key)
             ptr->GetRight() = std::make_unique<TreeNode<T>>(ptr, a_key);
             ptr = ptr->GetRight().get();
         }
+        std::cout << "next insert \n" << std::endl;
         std::cout << "Key: " << a_key << " - Before balancing: " << std::endl;
         PrintTree();
         BalanceTree(ptr);
         std::cout << "Key: " << a_key << " - After balancing: " << std::endl;
         PrintTree();
-        std::cout << "next insert \n" << std::endl;
     }
 }
 
