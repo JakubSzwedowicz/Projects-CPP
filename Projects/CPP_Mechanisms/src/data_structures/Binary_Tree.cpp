@@ -7,31 +7,31 @@ template class BinaryTree<int>;
 template <typename T>
 void BinaryTree<T>::Insert(T a_key)
 {
+    std::cout << "next insert \n" << std::endl;
     if(m_root == nullptr)
         m_root = std::make_unique<TreeNode<T>>(a_key);
-    else
-    {
+    else {
         TreeNode<T>* ptr = m_root.get();
-        ptr = TravelTree(ptr, a_key);
-        if(a_key < ptr->GetData())
+        ptr = TravelTree(m_root.get(), a_key);
+        if (ptr->GetData() == a_key) // Adding the duplicate
         {
-            ptr->GetLeft() = std::make_unique<TreeNode<T>>(ptr, a_key);
-            ptr = ptr->GetLeft().get();
+            ptr->GetDuplicates()++;
+        } else {
+            if (a_key < ptr->GetData()) {
+                ptr->GetLeft() = std::make_unique<TreeNode<T>>(ptr, a_key);
+                ptr = ptr->GetLeft().get();
+            } else {
+                ptr->GetRight() = std::make_unique<TreeNode<T>>(ptr, a_key);
+                ptr = ptr->GetRight().get();
+            }
+            std::cout<<"Key: "<<a_key<<" - Before balancing: "<<std::endl;
+            PrintTree();
+            BalanceTree(ptr);
+            std::cout<<"Key: "<<a_key<<" - After balancing: "<<std::endl;
         }
-        else
-        {
-            ptr->GetRight() = std::make_unique<TreeNode<T>>(ptr, a_key);
-            ptr = ptr->GetRight().get();
-        }
-        std::cout << "next insert \n" << std::endl;
-        std::cout << "Key: " << a_key << " - Before balancing: " << std::endl;
-        PrintTree();
-        BalanceTree(ptr);
-        std::cout << "Key: " << a_key << " - After balancing: " << std::endl;
-        PrintTree();
     }
+    PrintTree();
 }
-
 template <typename T>
 TreeNode<T>* BinaryTree<T>::TravelTree(TreeNode<T>* a_ptr, T a_key)
 {
@@ -42,16 +42,16 @@ TreeNode<T>* BinaryTree<T>::TravelTree(TreeNode<T>* a_ptr, T a_key)
         else
             return TravelTree(a_ptr->GetLeft().get(), a_key);
     }
-    else
+    else if(a_key > a_ptr->GetData())
     {
         if(a_ptr->GetRight() == nullptr)
             return a_ptr;
         else
             return TravelTree(a_ptr->GetRight().get(), a_key);
-
     }
+    else
+        return a_ptr;
 }
-
 template<typename T>
 void BinaryTree<T>::PrintTree(TreeNode<T>* a_node, int a_space)
 {
@@ -62,15 +62,13 @@ void BinaryTree<T>::PrintTree(TreeNode<T>* a_node, int a_space)
     PrintTree(a_node->GetRight().get(), a_space);
     for(int i = count; i < a_space; i++)
         std::cout << "\t";
-    std::cout << a_node->GetData() << "_" << a_node->GetColor() << "\n";
+    std::cout << *a_node << "\n";
     PrintTree(a_node->GetLeft().get(), a_space);
 }
-
 template<typename T>
 void BinaryTree<T>::PrintTree() {
     PrintTree(m_root.get(), 0);
 }
-
 template<typename T>
 void BinaryTree<T>::BalanceTree(TreeNode<T>* a_node) {
     if(a_node->GetParent() == nullptr || a_node->GetParent()->GetColor()) // if a_node is a root or if parent is black
@@ -81,22 +79,21 @@ void BinaryTree<T>::BalanceTree(TreeNode<T>* a_node) {
         a_node = a_node->GetParent();
         TreeNode<T>* new_nodes_parent = a_node;
         a_node = a_node->GetParent();
-        bool not_collored = true;
+        bool not_colored = true;
         if(a_node->GetRight() != nullptr && a_node->GetRight()->GetColor() == false)
             if(a_node->GetLeft() != nullptr && a_node->GetLeft()->GetColor() == false)
             {
-                not_collored = false;
+                not_colored = false;
                 RecolorCaseOne(a_node);
                 BalanceTree(a_node);
             }
-        if(not_collored)
+        if(not_colored)
         {
             RecolorCaseTwo(new_node, new_nodes_parent, a_node);
-            not_collored = false;
+            not_colored = false;
         }
     }
 }
-
 template <typename T>
 void BinaryTree<T>::RecolorCaseOne(TreeNode<T>* parent)
 {
@@ -116,7 +113,6 @@ void BinaryTree<T>::RotateRight(TreeNode<T>*& a_child, TreeNode<T>*& a_parent)
         m_root.reset(a_child);
     }
 }
-
 template<typename T>
 void BinaryTree<T>::RotateLeft(TreeNode<T> *&a_child, TreeNode<T> *&a_parent) {
     if(m_root.get() == a_parent)
@@ -128,7 +124,6 @@ void BinaryTree<T>::RotateLeft(TreeNode<T> *&a_child, TreeNode<T> *&a_parent) {
         a_parent = a_child;
     }
 }
-
 template <typename T>
 void BinaryTree<T>::RecolorCaseTwo(TreeNode<T>* a_grandchild, TreeNode<T>* a_child, TreeNode<T>* a_parent)
 {
@@ -159,4 +154,10 @@ void BinaryTree<T>::RecolorCaseTwo(TreeNode<T>* a_grandchild, TreeNode<T>* a_chi
     }
     a_parent->GetColor() = !a_parent->GetColor();
     a_child->GetColor() = !a_child->GetColor();
+}
+
+template <typename T>
+void BinaryTree<T>::Remove(int a_node_number)
+{
+
 }

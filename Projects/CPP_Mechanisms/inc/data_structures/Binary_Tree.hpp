@@ -16,7 +16,7 @@ public:
     void RecolorCaseOne(TreeNode<T> *parent);
 
     void RecolorCaseTwo(TreeNode<T>*, TreeNode<T>*, TreeNode<T>*);
-
     void RotateRight(TreeNode<T> *&a_child, TreeNode<T> *&a_parent);
     void RotateLeft(TreeNode<T> *&a_child, TreeNode<T> *&a_parent);
+    void Remove(int);
 };

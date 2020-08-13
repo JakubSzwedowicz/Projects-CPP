@@ -320,7 +320,11 @@ void TestBinaryTree()
         myTree.Insert(11);
         myTree.Insert(1);
         myTree.Insert(10);
+        myTree.Insert(60);
+        myTree.Insert(10);
+        myTree.Insert(20);
+        myTree.Insert(21);
+        myTree.Insert(22);
 //        myTree.PrintTree();
-
     }
 }

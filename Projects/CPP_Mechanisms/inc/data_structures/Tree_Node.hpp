@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <cmath>
 
 template <typename T>
 class TreeNode
@@ -10,9 +11,10 @@ private:
     std::unique_ptr<TreeNode<T>> m_right;
     bool m_color; // true = black, false = red
     T m_data;
+    int m_duplicates;
 public:
-    TreeNode(TreeNode<T>*& a_parent, T a_data) : m_data(a_data), m_parent(a_parent), m_color(false) {};
-    TreeNode(T a_data) : m_data(a_data), m_parent(nullptr), m_color(true) {};
+    TreeNode(TreeNode<T>*& a_parent, T a_data) : m_data(a_data), m_parent(a_parent), m_color(false), m_duplicates(0) {};
+    TreeNode(T a_data) : m_data(a_data), m_parent(nullptr), m_color(true), m_duplicates(0) {};
     inline std::unique_ptr<TreeNode<T>>& GetLeft() { return m_left;};   // It's inline anyway
     inline std::unique_ptr<TreeNode<T>>& GetRight() { return m_right; };
     T& GetData() { return m_data;};
@@ -20,7 +22,12 @@ public:
     inline TreeNode<T>*& GetParent() {return m_parent;};
     void RotateLeft(TreeNode<T>*&);
     void RotateRight(TreeNode<T>*&);
-
+    inline int& GetDuplicates() {return m_duplicates;};
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream& a_out, const TreeNode<U>& a_node){
+        a_out << a_node.m_data << "_" << a_node.m_color << "(" << a_node.m_duplicates << ")";
+        return a_out;
+    }
 };
 
 template<typename T>
