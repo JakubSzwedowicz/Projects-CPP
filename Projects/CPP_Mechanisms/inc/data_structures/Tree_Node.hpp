@@ -35,7 +35,11 @@ void TreeNode<T>::RotateLeft(TreeNode<T> *&a_node) {    // Function assumes that
     m_parent = a_node->m_parent;
     a_node->m_parent = this;
     a_node->m_right.release();
-    a_node->m_right.reset(this->m_left.release()); // So not to lose right branch of this
+    if(m_left != nullptr)
+    {
+        this->m_left->GetParent() = a_node;
+        a_node->m_right.reset(this->m_left.release()); // So not to lose right branch of this
+    }
     if(m_parent != nullptr)
     {
         if(m_parent->m_left.get() == a_node)  // a_node might be on the left of its parent
@@ -57,7 +61,11 @@ void TreeNode<T>::RotateRight(TreeNode<T> *&a_node){   // Function assumes that 
     m_parent = a_node->m_parent;
     a_node->m_parent = this;
     a_node->m_left.release();
-    a_node->m_left.reset(this->m_right.release()); // So not to lose right branch of this
+    if(m_right != nullptr)
+    {
+        this->m_right->GetParent() = a_node;
+        a_node->m_left.reset(this->m_right.release()); // So not to lose right branch of this
+    }
     if(m_parent != nullptr)
     {
         if(m_parent->m_left.get() == a_node)  // a_node might be on the left of its parent

@@ -325,6 +325,9 @@ void TestBinaryTree()
         myTree.Insert(20);
         myTree.Insert(21);
         myTree.Insert(22);
+        myTree.Remove(1);
+        myTree.Remove(2);
+        myTree.Remove(10);
 //        myTree.PrintTree();
     }
 }
