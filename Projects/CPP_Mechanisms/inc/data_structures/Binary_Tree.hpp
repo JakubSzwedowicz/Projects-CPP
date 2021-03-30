@@ -25,4 +25,6 @@ public:
     void RemoveCaseThree(TreeNode<T>*, TreeNode<T>*, bool);
 
     void TransplantNodes(TreeNode<T> *a_first, TreeNode<T> *a_second);
+
+    void FixTreeAfterDeletion(TreeNode<T>*);
 };

@@ -1,3 +1,4 @@
+
 # Projects-CPP
 Some short C++ projects put into one repo. 
 
@@ -30,3 +31,10 @@ the description is taken from here: [Link] (https://github.com/thekarangoel/Proj
 
 **Data Structures** - Currently contains double linked list and Red-black tree built upon smart pointers.
 
+**Breadth First Search** - Algorithm to search the graphs and trees. Breadth first.
+
+**Depth First Search** - An algorithm to travel through all the vertices of graph. Depth first.
+
+**Greedy Algorithm** - Have the user type the amount of changing money so the algorithm could return the change split into different denominations. Implements so called "greedy algorithm".
+
+**Longest Increasing Subsequence** - Typical algorithm for finding the longest increasing subsequence ina given range of elements.

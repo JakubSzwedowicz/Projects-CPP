@@ -1,5 +1,5 @@
 
-add_library(Sorter Sorter.cpp ${PROJECT_SOURCE_DIR}/inc/Sorter.hpp)
+add_library(Sorter Sorter.cpp)
 
 target_include_directories(Sorter PUBLIC ${PROJECT_SOURCE_DIR}/inc)
 

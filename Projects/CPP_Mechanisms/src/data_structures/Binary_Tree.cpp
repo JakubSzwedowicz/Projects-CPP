@@ -167,35 +167,53 @@ void BinaryTree<T>::Remove(int a_node_key)    // https://www.programiz.com/dsa/r
     TreeNode<T>* node_to_remove = TravelTree(a_node_key);
     if(node_to_remove->GetData() == a_node_key) // In case user tries to remove sth that doesnt exist
     {
-        bool removed_node_color = node_to_remove->GetColor();   // Saving the color of removed node
+        bool saved_color = node_to_remove->GetColor();   // Saving the color of removed node
         TreeNode<T>* node_replacement = node_to_remove;
         TreeNode<T>* node_repl_child;
 
         if(node_to_remove->GetLeft() == nullptr)
+        {
             node_replacement = node_to_remove->GetRight().get();
+            TransplantNodes(node_to_remove, node_replacement);
+        }
        else if (node_to_remove->GetRight() == nullptr)
-           node_replacement = node_to_remove->GetLeft().get();
+        {
+            node_replacement = node_to_remove->GetLeft().get();
+            TransplantNodes(node_to_remove, node_replacement);
+        }
        else
        {
             node_replacement = node_to_remove->GetRight().get();
             while(node_replacement->GetLeft() != nullptr)
                 node_replacement = node_replacement->GetLeft().get(); // finds the smallest node in right subtree of node_to_remove
-            removed_node_color = node_replacement->GetColor();
+            saved_color = node_replacement->GetColor();
             node_repl_child = node_replacement->GetRight().get();
+            if(node_to_remove->GetRight().get() == node_replacement)
+                TransplantNodes(node_to_remove, node_replacement);
+            else
+            {
+                T temp_data = node_replacement->GetData();
+                TransplantNodes(node_replacement, node_repl_child);
+                node_to_remove->GetData() = temp_data;
+            }
+           node_replacement->GetColor() = saved_color;
        }
-       if(node_replacement != nullptr)  // In case of removed node being a leaf meaning it has no child
-           node_replacement->GetParent() = node_to_remove->GetParent();
+//       if(node_replacement != nullptr)  // In case of removed node being a leaf meaning it has no child
+//           node_replacement->GetParent() = node_to_remove->GetParent();
        TransplantNodes(node_to_remove, node_replacement);
-       if(removed_node_color == true)
+       if(saved_color == true)
        {
            std::cout << "repairing black-red tree not implemented yet" << std::endl;
            // Repair the black-red tree
+           FixTreeAfterDeletion(node_replacement);
        }
     }
     std::cout << "Key: " << a_node_key << " - After removing:" << std::endl;
     PrintTree();
 }
 
+// Function prone to memory leaks if a_first has 2 children and a_second doesn't have a corresponding nullptr
+// to obtain the second child of a_first
 template <typename T>
 void BinaryTree<T>::TransplantNodes(TreeNode<T>* a_first, TreeNode<T>* a_second)    // a_first is a parent of a_second
 {
@@ -215,13 +233,38 @@ void BinaryTree<T>::TransplantNodes(TreeNode<T>* a_first, TreeNode<T>* a_second)
     if(a_second != nullptr)
     {
         a_second->GetParent() = parent;
-        if((a_second->*not_child_side)() == nullptr)
+        if((a_second->*not_child_side)() == nullptr)    // Safety measure, it shouldn't be the case though
             (a_second->*not_child_side)().reset((a_first->*not_child_side)().release());
         else
             std::cout << "ERROR: DATA LOSS WHEN TRANSPLANTING NODES!" << std::endl;   // not using exceptions yet!
     }
-    (parent->*parent_side)().reset((a_first->*child_side)().release());
+    if(m_root.get() != a_first)
+        (parent->*parent_side)().reset((a_first->*child_side)().release()); // a_second may be a nullptr if a_first is a leaf
+    else
+        (parent->*parent_side)().reset((a_first->*child_side)().release()); // a_second may be a nullptr if a_first is a leaf
+}
 
+// The function kicks off if removed node was black and its replacement a_node is doubly black
+// or simultaneously black and red
+template<typename T>
+void BinaryTree<T>::FixTreeAfterDeletion(TreeNode<T>* a_node) {
+    if(a_node == m_root.get() || a_node->GetColor() == false)
+        return;
+    else
+    {
+        while(a_node->GetColor() == true && m_root.get() == a_node)
+        {
+            auto& (TreeNode<T>::*a_node_side)() = TreeNode<T>::GetRight;
+            auto& (TreeNode<T>::*sibling_side)() = TreeNode<T>::GetRight;
+            auto& (TreeNode<T>::*parent_side)() = a_node->GetParent();
+            if(a_node->GetParent()->GetRight().get() == a_node)
+                sibling_side = TreeNode<T>::GetLeft;
+            else
+                a_node_side = TreeNode<T>::GetLeft;
+            TreeNode<T>* sibling = a_node->GetParent()->*sibling_side();
+//            if()
+        }
+    }
 }
 
 //template <typename T>
