@@ -262,7 +262,7 @@ void BinaryTree<T>::FixTreeAfterDeletion(TreeNode<T>* a_node) {
             else
                 a_node_side = TreeNode<T>::GetLeft;
             TreeNode<T>* sibling = a_node->GetParent()->*sibling_side();
-//            if()
+            if()
         }
     }
 }
