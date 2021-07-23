@@ -1,0 +1,3 @@
+[submodule "Projects/Networking_ASIO/Projects/Networking_ASIO/tests/googletest"]
+	path = Projects/Networking_ASIO/Projects/Networking_ASIO/tests/googletest
+	url = https://github.com/google/googletest/
