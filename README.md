@@ -38,3 +38,5 @@ the description is taken from here: [Link](https://github.com/thekarangoel/Proje
 **Greedy Algorithm** - Have the user type the amount of changing money so the algorithm could return the change split into different denominations. Implements so called "greedy algorithm".
 
 **Longest Increasing Subsequence** - Typical algorithm for finding the longest increasing subsequence ina given range of elements.
+
+**Desing Patterns** - Set of different programming patterns and principles with examples of implementations.
